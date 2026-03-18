@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitmap Font Generator</title>
+
+    <!-- TwailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-neutral-900 text-white">
+    <!-- Main container (card in center) -->
+    <div class="flex items-center justify-center h-full">
+        <div class="bg-neutral-800 shadow-lg rounded-lg p-6 w-full lg:max-w-4xl">
+            <h1 class="text-2xl font-semibold">Bitmap Font Generator</h1>
+            <p class="text-gray-400 mb-4">Upload a font file to generate a bitmap font.</p>
+            <!-- divider -->
+            <div class="border-b border-neutral-500 mb-4"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="relative">
+                    <label class="block text-md font-medium mb-2 dark:text-white" for="fontFile">Select font file</label>
+                    <input
+                        class="block w-full text-sm text-gray-500
+                                file:me-4 file:py-2 file:px-4
+                                file:rounded-lg file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-600 file:text-white
+                                hover:file:bg-blue-700
+                                file:disabled:opacity-50 file:disabled:pointer-events-none
+                                dark:text-neutral-300
+                                dark:file:bg-blue-600
+                                dark:hover:file:bg-blue-500
+                                file:cursor-pointer
+                                cursor-pointer"
+                        aria-describedby="fontFileHelp"
+                        id="fontFile"
+                        type="file"
+                        accept=".ttf, .otf, .woff, .woff2"
+                        @change="onFontChanged">
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="fontFileHelp">TTF, OTF, WOFF or WOFF2.</p>
+                    <!-- Font example viewer -->
+                    <h3 class="text-lg font-semibold mt-4"
+                        v-effect="if (loadedFont) { $el.style.fontFamily = loadedFont; }">
+                        Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm<br>
+                        0123456789 !@#$%^&*()_+[]{}|;:',.<>?/
+                    </h3>
+                </div>
+                <div class="relative">
+                    <label class="block text-md font-medium mb-2 dark:text-white">Bitmap Font Settings</label>
+                    <div class="mb-4">
+                        <div class="flex rounded-lg">
+                            <span class="px-4 inline-flex items-center min-w-fit rounded-s-md border border-e-0 border-gray-200 bg-gray-50 text-md text-gray-500 dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-400">Cell Size</span>
+                            <input type="number" min="8" max="64" v-model="cellSize" class="py-2.5 sm:py-3 px-4 pe-11 block w-full border-gray-200 rounded-e-lg text-md sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex rounded-lg relative">
+                            <span class="px-4 inline-flex items-center min-w-fit rounded-s-md border border-e-0 border-gray-200 bg-gray-50 text-sm text-gray-500 dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-400">
+                                <span class="flex">
+                                    <input type="checkbox" v-model="enablePixelEffect" class="shrink-0 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-input-group-with-checkbox">
+                                    <label for="hs-input-group-with-checkbox" class="ml-2 text-md font-medium">Pixel Effect</label>
+                                </span>
+                            </span>
+                            <input type="text" min="0" max="255" v-model="threshold" v-effect="if (enablePixelEffect) $el.focus()" :disabled="!enablePixelEffect" name="hs-input-with-add-on-url-checkbox" id="hs-input-with-add-on-url-checkbox" class="py-2.5 sm:py-3 px-4 pe-11 block w-full border-gray-200 rounded-e-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                            <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none z-20 pe-4">
+                                <span class="text-gray-500 dark:text-neutral-500">Threshold</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 flex">
+                        <label for="transparencyCK" class="relative inline-block w-11 h-6 cursor-pointer mr-4">
+                            <input type="checkbox" id="transparencyCK" v-model="enableTransparency" class="peer sr-only">
+                            <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                            <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+                        </label>
+                        <span class="block text-md font-medium mb-2 dark:text-white">Transparency</span>
+                    </div>
+
+                    <div class="mb-4 flex">
+                        <label for="encodeWidthsCK" class="relative inline-block w-11 h-6 cursor-pointer mr-4">
+                            <input type="checkbox" id="encodeWidthsCK" v-model="encodeWidths" class="peer sr-only">
+                            <span class="absolute inset-0 bg-gray-200 rounded-full transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 dark:bg-neutral-700 dark:peer-checked:bg-blue-500 peer-disabled:opacity-50 peer-disabled:pointer-events-none"></span>
+                            <span class="absolute top-1/2 start-0.5 -translate-y-1/2 size-5 bg-white rounded-full shadow-xs transition-transform duration-200 ease-in-out peer-checked:translate-x-full dark:bg-neutral-400 dark:peer-checked:bg-white"></span>
+                        </label>
+                        <span class="block text-md font-medium mb-2 dark:text-white">Encode character widths</span>
+                    </div>
+
+                    <button type="button" @click="generate" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        Generate Font 🔠
+                    </button>
+                </div>
+                <!-- span = 2, preview area -->
+                <div class="col-span-2">
+                    <label class="block text-lg font-medium mb-2 dark:text-white">Preview</label>
+                    <div class="w-full h-[400px] border border-gray-500 rounded-lg overflow-hidden flex items-center justify-center relative">
+                        <canvas id="fontCanvas" class="w-full h-full object-contain"></canvas>
+                        <!-- download button -->
+                        <button id="downloadLink" @click="download" :disabled="!generated" class="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
+                            Download
+                        </button>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">Preview of the generated bitmap font.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createApp } from 'https://unpkg.com/petite-vue?module';
+
+        createApp({
+            cellSize: 16,
+            enableTransparency: false,
+            encodeWidths: false,
+            enablePixelEffect: false,
+            threshold: 128,
+            fontFileInput: null,
+            loadedFont: null,
+            generated: false,
+
+            async onFontChanged(event) {
+                this.fontFileInput = event.target;
+
+                const file = event.target.files[0];
+                if (!file) return;
+
+                // Revoke the previous font if it exists
+                if (this.loadedFont && this.fontFileInput.previousFontUrl) {
+                    URL.revokeObjectURL(this.fontFileInput.previousFontUrl);
+                }
+
+                const fontUrl = URL.createObjectURL(file);
+                this.fontFileInput.previousFontUrl = fontUrl;
+                this.loadedFont = 'UserFont';
+
+                try {
+                    const customFont = new FontFace(this.loadedFont, `url(${fontUrl})`);
+                    await customFont.load();
+                    document.fonts.add(customFont);
+                } catch (error) {
+                    console.error('Error loading font:', error);
+                    this.loadedFont = null;
+                    return;
+                }
+            },
+
+            download() {
+                const canvas = document.getElementById('fontCanvas');
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'bitmap_font.png';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                console.log('Font downloaded successfully!');
+            },
+
+            generate() {
+                const charset =
+                    "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F" +
+                    "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F" +
+                    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`" +
+                    "abcdefghijklmnopqrstuvwxyz{|}~\x7F€\x81‚ƒ„…†‡ˆ‰Š‹Œ\x8FŽ\x90‘’“”•–—˜™š›œ\x9FžŸ" +
+                    " ¡¢£¤¥¦§¨©ª«¬\xAD®¯°±²³´µ¶·¸¹º»¼½¾¿" +
+                    "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß" +
+                    "àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
+                
+                // calculate font size from cell size
+                const fontSize = this.cellSize;
+                const cellSize = this.cellSize;
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d', { alpha: true });
+                canvas.width = cellSize * 16;
+                canvas.height = cellSize * 16;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (!this.enableTransparency) {
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                function renderSingleChar(char, x, y) {
+                    const charCanvas = document.createElement('canvas');
+                    const charCtx = charCanvas.getContext('2d', { alpha: true });
+                    charCanvas.width = cellSize;
+                    charCanvas.height = cellSize;
+
+                    charCtx.clearRect(0, 0, cellSize, cellSize);
+                    
+                    charCtx.fillStyle = '#fff';
+                    charCtx.font = `${fontSize}px ${this.loadedFont}`;
+                    charCtx.textAlign = 'left';
+                    charCtx.textBaseline = 'top';
+                    charCtx.imageSmoothingEnabled = false;
+
+                    const metrics = charCtx.measureText(char);
+                    const textWidth = metrics.width;
+
+                    charCtx.fillText(char, 0, 0);
+
+                    if (this.enablePixelEffect) {
+                        const imageData = charCtx.getImageData(0, 0, cellSize, cellSize);
+                        const data = imageData.data;
+
+                        for (let p = 0; p < data.length; p += 4) {
+                            const alpha = data[p];
+                            if (alpha >= this.threshold) {
+                                data[p + 3] = 255; // A
+                            } else {
+                                data[p + 3] = 0; // A
+                            }
+                        }
+                        charCtx.putImageData(imageData, 0, 0);
+                    }
+
+                    ctx.drawImage(charCanvas, x, y);
+                    return textWidth;
+                }
+
+                let charMetrics = [];
+                for (let i = 0; i < charset.length; i++) {
+                    const char = charset[i];
+                    const x = (i % 16) * cellSize;
+                    const y = Math.floor(i / 16) * cellSize;
+
+                    charMetrics.push(renderSingleChar.call(this, char, x, y));
+                }
+
+                if (this.encodeWidths) {
+                    // process the image data to add text metrics to it in the green channel
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+
+                    for (let y = 0; y < canvas.height; y++) {
+                        for (let x = 0; x < canvas.width; x++) {
+                            const index = (y * canvas.width + x) * 4;
+                            const indexInCharset = Math.floor(y / cellSize) * 16 + Math.floor(x / cellSize);
+                            if (indexInCharset < charset.length) {
+                                const charWidth = charMetrics[indexInCharset];
+                                const cwValueMappedTo255 = Math.floor(charWidth / cellSize * 255);
+                                data[index + 1] = cwValueMappedTo255; // Store width in green channel
+                            } else {
+                                data[index + 1] = 0; // Clear unused pixels
+                            }
+                            data[index + 2] = 0; // Clear blue channel
+                        }
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                }
+                
+                // Set the canvas as the preview
+                const previewCanvas = document.getElementById('fontCanvas');
+                const previewCtx = previewCanvas.getContext('2d');
+                previewCanvas.width = canvas.width;
+                previewCanvas.height = canvas.height;
+                previewCanvas.style.width = `${canvas.width}px`;
+                previewCanvas.style.height = `${canvas.height}px`;
+                previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+                previewCtx.drawImage(canvas, 0, 0);
+                console.log('Font generated successfully!');
+
+                this.generated = true;
+            }
+        }).mount();
+    </script>
+
+    <script type="text/javascript">
+        let loadedFont = null;
+
+        function generate() {
+            // build codepage 850 charset
+            const charset =
+                "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F" +
+                "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F" +
+                " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`" +
+                "abcdefghijklmnopqrstuvwxyz{|}~\x7F€\x81‚ƒ„…†‡ˆ‰Š‹Œ\x8FŽ\x90‘’“”•–—˜™š›œ\x9FžŸ" +
+                " ¡¢£¤¥¦§¨©ª«¬\xAD®¯°±²³´µ¶·¸¹º»¼½¾¿" +
+                "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß" +
+                "àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ";
+            const fontSize = 16;
+            const cellSize = 16;
+            const cols = Math.floor(canvas.width / cellSize);
+            const rows = Math.floor(canvas.height / cellSize);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            function renderSingleChar(char, x, y) {
+                const charCanvas = document.createElement('canvas');
+                const charCtx = charCanvas.getContext('2d', { alpha: true });
+                charCanvas.width = cellSize;
+                charCanvas.height = cellSize;
+                charCtx.fillStyle = '#000';
+                charCtx.fillRect(0, 0, cellSize, cellSize);
+                
+                charCtx.fillStyle = '#fff';
+                charCtx.font = `${fontSize}px ${loadedFont}`;
+                charCtx.textAlign = 'left';
+                charCtx.textBaseline = 'top';
+                charCtx.imageSmoothingEnabled = false;
+
+                const metrics = charCtx.measureText(char);
+                const textWidth = metrics.width;
+
+                charCtx.fillText(char, 0, 0);
+
+                const imageData = charCtx.getImageData(0, 0, cellSize, cellSize);
+                const data = imageData.data;
+
+                for (let p = 0; p < data.length; p += 4) {
+                    const alpha = data[p];
+                    if (alpha >= 128) {
+                        data[p] = 255; // R
+                        data[p + 1] = 255; // G
+                        data[p + 2] = 255; // B
+                        data[p + 3] = 255; // A
+                    } else {
+                        data[p] = 0; // R
+                        data[p + 1] = 0; // G
+                        data[p + 2] = 0; // B
+                        data[p + 3] = 255; // A
+                    }
+                }
+                charCtx.putImageData(imageData, 0, 0);
+
+                ctx.drawImage(charCanvas, x, y);
+
+                return textWidth;
+            }
+
+            let charMetrics = [];
+            for (let i = 0; i < charset.length; i++) {
+                const char = charset[i];
+                const x = (i % cols) * cellSize;
+                const y = Math.floor(i / cols) * cellSize;
+
+                charMetrics.push(renderSingleChar(char, x, y));
+            }
+
+            // process the image data to add text metrics to it in the green channel
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const index = (y * canvas.width + x) * 4;
+                    const indexInCharset = Math.floor(y / cellSize) * cols + Math.floor(x / cellSize);
+                    if (indexInCharset < charset.length) {
+                        const charWidth = charMetrics[indexInCharset];
+                        const cwValueMappedTo255 = Math.floor(charWidth / cellSize * 255);
+                        data[index + 1] = cwValueMappedTo255; // Store width in green channel
+                    } else {
+                        data[index + 1] = 0; // Clear unused pixels
+                    }
+                    data[index + 2] = 0; // Clear blue channel
+                    data[index + 3] = 255; // Set alpha to fully opaque
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            console.log('Font generated successfully!');
+        }
+    </script>
+</body>
+</html>
