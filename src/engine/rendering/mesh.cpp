@@ -1,6 +1,7 @@
 #include "mesh.h"
 
 #include <sstream>
+#include <float.h>
 
 #include "../utils/physfs_wrapper.h"
 #include "../utils/string_utils.h"

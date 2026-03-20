@@ -23,7 +23,7 @@ enum class BlendEquation {
 	max = GL_MAX
 };
 
-struct RENGINE_API BlendState {
+struct BlendState {
 	bool enabled{ false };
 	BlendFunction source{ BlendFunction::one };
 	BlendFunction destination{ BlendFunction::zero };
@@ -65,7 +65,7 @@ enum class StencilOperation {
 	decrementWrap = GL_DECR_WRAP
 };
 
-struct RENGINE_API DepthStencilState {
+struct DepthStencilState {
 	struct {
 		bool enabled{ false };
 		CompareFunction function{ CompareFunction::less };
@@ -113,7 +113,7 @@ enum class PolygonMode {
 	fill = GL_FILL
 };
 
-struct RENGINE_API RasterizerState {
+struct RasterizerState {
 	struct {
 		CullMode cullMode{ CullMode::back };
 		WindingOrder windingOrder{ WindingOrder::counterClockwise };
@@ -134,14 +134,14 @@ struct RENGINE_API RasterizerState {
 	void Apply() const;
 };
 
-struct RENGINE_API PipelineDescription {
+struct PipelineDescription {
 	Shader* shader{ nullptr };
 	BlendState blendState{};
 	DepthStencilState depthStencilState{};
 	RasterizerState rasterizerState{};
 };
 
-class RENGINE_API Pipeline {
+class Pipeline {
 public:
 	Pipeline() = default;
 	Pipeline(const PipelineDescription& description);

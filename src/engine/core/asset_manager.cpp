@@ -436,6 +436,15 @@ SPtr<Texture> AssetManager::GetTexture(const str& path)
 	if (it != mTextures.end()) {
 		return it->second;
 	}
+
+	// Try loading it
+	LoadTexture(path, Opt<TextureDescription>());
+
+	auto it2 = mTextures.find(path);
+	if (it2 != mTextures.end()) {
+		return it2->second;
+	}
+
 	utils::LogE("Texture not found: {}", path);
 	return nullptr;
 }
@@ -446,6 +455,15 @@ SPtr<Mesh> AssetManager::GetMesh(const str& path)
 	if (it != mMeshes.end()) {
 		return it->second;
 	}
+
+	// Try loading it
+	LoadMesh(path);
+
+	auto it2 = mMeshes.find(path);
+	if (it2 != mMeshes.end()) {
+		return it2->second;
+	}
+
 	utils::LogE("Mesh not found: {}", path);
 	return nullptr;
 }

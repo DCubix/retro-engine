@@ -1,6 +1,6 @@
 #include "rendering_engine.h"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "shaders/generated/phong_vert.h"
 #include "shaders/generated/phong_frag.h"

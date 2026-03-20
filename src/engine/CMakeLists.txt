@@ -51,19 +51,20 @@ add_custom_target(embed_shaders ALL
 
 ### Add CPM modules
 
-# Find SDL2 package
+# Find SDL3 package
 CPMAddPackage(
-    NAME SDL2
+    NAME SDL3
     GITHUB_REPOSITORY libsdl-org/SDL
-    GIT_TAG release-2.32.4
+    GIT_TAG release-3.4.2
     OPTIONS
         "SDL_SHARED OFF"
         "SDL_STATIC ON"
+        "SDL_X11_XSCRNSAVER OFF"
 )
 
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 11.1.4
+  GIT_TAG 12.1.0
   GITHUB_REPOSITORY fmtlib/fmt
 )
 
@@ -91,7 +92,7 @@ CPMAddPackage(
 
 CPMAddPackage(
     NAME assimp
-    GIT_TAG v5.4.3
+    GIT_TAG v6.0.4
     GITHUB_REPOSITORY assimp/assimp
     OPTIONS
         "BUILD_SHARED_LIBS OFF"
@@ -114,15 +115,14 @@ file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS "*.cpp" "*.c" "*.cc" "*.cxx")
 file(GLOB_RECURSE ENGINE_HEADERS "*.h" "*.hpp" "*.hxx")
 
 # Add executable
-add_library(${LIBNAME} SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
+add_library(${LIBNAME} STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 target_include_directories(${LIBNAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(${LIBNAME} PRIVATE RENGINE_DLL)
 
 add_dependencies(${LIBNAME} embed_shaders)
 
-if (SDL2_ADDED)
-    target_include_directories(${LIBNAME} PUBLIC ${SDL2_SOURCE_DIR}/include)
-    target_link_libraries(${LIBNAME} PUBLIC SDL2::SDL2-static)
+if (SDL3_ADDED)
+    target_include_directories(${LIBNAME} PUBLIC ${SDL3_SOURCE_DIR}/include)
+    target_link_libraries(${LIBNAME} PUBLIC SDL3::SDL3-static)
 endif()
 
 if (fmt_ADDED)

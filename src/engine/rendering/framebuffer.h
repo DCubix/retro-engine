@@ -15,7 +15,7 @@ enum class RenderBufferFormat {
 	depthStencil = GL_DEPTH24_STENCIL8,
 };
 
-struct RENGINE_API FrameBufferDescription {
+struct FrameBufferDescription {
 	u32 width{ 0 };
 	u32 height{ 0 };
 	
@@ -34,7 +34,7 @@ struct RENGINE_API FrameBufferDescription {
 	} renderBuffer;
 };
 
-class RENGINE_API FrameBuffer : public IGPUResource {
+class FrameBuffer : public IGPUResource {
 public:
 	FrameBuffer() = default;
 	FrameBuffer(const FrameBufferDescription& description);

@@ -1,4 +1,5 @@
 #include "messaging.h"
+#include <algorithm>
 
 UPtr<MessageBus> MessageBus::mInstance;
 

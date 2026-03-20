@@ -6,7 +6,7 @@
 
 #include "../external/raymath/raymath.h"
 
-struct RENGINE_API DebugDrawVertex {
+struct DebugDrawVertex {
 	Vector3 position;
     Vector2 uv{ 0.0f, 0.0f };
 	Vector4 color;
@@ -36,7 +36,7 @@ enum class DebugDrawPrimitiveType {
 	triangleFan,
 };
 
-struct RENGINE_API DebugDrawCommand {
+struct DebugDrawCommand {
 	DebugDrawPrimitiveType primitiveType;
 	std::vector<DebugDrawVertex> vertices;
 	Texture* texture{ nullptr };
@@ -48,7 +48,7 @@ struct RENGINE_API DebugDrawCommand {
 	u32 stipplePattern{ 0x0 };
 };
 
-struct RENGINE_API DebugDrawBatch {
+struct DebugDrawBatch {
 	DebugDrawPrimitiveType primitiveType;
 	u32 offset; // offset in the vertex buffer
 	u32 count; // number of vertices
@@ -61,7 +61,7 @@ struct RENGINE_API DebugDrawBatch {
     u32 stipplePattern{ 0x0 };
 };
 
-class RENGINE_API DebugDraw {
+class DebugDraw {
 public:
 	DebugDraw() = default;
 	DebugDraw(u32 windowWidth, u32 windowHeight);

@@ -19,13 +19,13 @@ enum class ShaderType {
 	geometryShader = GL_GEOMETRY_SHADER
 };
 
-struct RENGINE_API ShaderDescription {
+struct ShaderDescription {
 	std::map<ShaderType, str> shaderSources;
 	std::map<str, str> includes;
 	std::map<ShaderType, std::vector<str>> defines;
 };
 
-class RENGINE_API Shader : public IGPUResource {
+class Shader : public IGPUResource {
 public:
 	Shader() = default;
 	Shader(const ShaderDescription& descriptor);

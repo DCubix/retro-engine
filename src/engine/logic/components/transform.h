@@ -3,7 +3,7 @@
 #include "../../external/raymath/raymath.h"
 #include "../component.h"
 
-class RENGINE_API Transform : public Component {
+class Transform : public Component {
 public:
 	Transform();
 

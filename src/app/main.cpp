@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include <SDL3/SDL.h>
 #include <iostream>
 
 #include "core/core_engine.h"
@@ -211,32 +211,32 @@ public:
 	void OnRender(RenderingEngine& renderer) override {
 		scene->Render(renderer);
 
-		auto dd = renderer.GetDebugDraw();
+		// auto dd = renderer.GetDebugDraw();
 
-		str stats = "";
+		// str stats = "";
 		
-		stats += "[/deepskyblue]CORE ENGINE\n";
-		stats += "[/darkgray]-------------------------------------[/reset]\n";
+		// stats += "[/deepskyblue]CORE ENGINE\n";
+		// stats += "[/darkgray]-------------------------------------[/reset]\n";
 
-		auto totalTimeCE = eng->GetProfiler().GetTotalTime();
-		for (const auto& [name, data] : eng->GetProfiler().GetData()) {
-			float percent = data.duration.count() / totalTimeCE.count() * 100.0f;
-			stats += fmt::format("[/gray]{}:[/reset] {:.2f}ms ({:.0f}%)\n", name, data.duration.count(), percent);
-		}
-		stats += "[/darkgray]-------------------------------------\n";
-		stats += fmt::format("[/yellow:60]Total:[/yellow] {:.2f}ms\n\n", totalTimeCE.count());
+		// auto totalTimeCE = eng->GetProfiler().GetTotalTime();
+		// for (const auto& [name, data] : eng->GetProfiler().GetData()) {
+		// 	float percent = data.duration.count() / totalTimeCE.count() * 100.0f;
+		// 	stats += fmt::format("[/gray]{}:[/reset] {:.2f}ms ({:.0f}%)\n", name, data.duration.count(), percent);
+		// }
+		// stats += "[/darkgray]-------------------------------------\n";
+		// stats += fmt::format("[/yellow:60]Total:[/yellow] {:.2f}ms\n\n", totalTimeCE.count());
 
-		stats += "[/deepskyblue]RENDERING ENGINE\n";
-		stats += "[/darkgray]-------------------------------------[/reset]\n";
+		// stats += "[/deepskyblue]RENDERING ENGINE\n";
+		// stats += "[/darkgray]-------------------------------------[/reset]\n";
 
-		auto totalTime = renderer.GetProfiler().GetTotalTime();
-		for (const auto& [name, data] : renderer.GetProfiler().GetData()) {
-			float percent = data.duration.count() / totalTime.count() * 100.0f;
-			stats += fmt::format("[/gray]{}:[/reset] {:.2f}ms ({:.0f}%)\n", name, data.duration.count(), percent);
-		}
-		stats += fmt::format("[/yellow:50]Total:[/yellow] {:.2f}ms\n", totalTime.count());
+		// auto totalTime = renderer.GetProfiler().GetTotalTime();
+		// for (const auto& [name, data] : renderer.GetProfiler().GetData()) {
+		// 	float percent = data.duration.count() / totalTime.count() * 100.0f;
+		// 	stats += fmt::format("[/gray]{}:[/reset] {:.2f}ms ({:.0f}%)\n", name, data.duration.count(), percent);
+		// }
+		// stats += fmt::format("[/yellow:50]Total:[/yellow] {:.2f}ms\n", totalTime.count());
 
-		dd->String(10, 10, stats, 1.0f);
+		// dd->String(10, 10, stats, 1.0f);
 	}
 
 	SPtr<Mesh> mesh;

@@ -49,9 +49,3 @@ struct alignas(8) TextureHandle {
 		return *this;
 	}
 };
-
-#ifdef RENGINE_DLL
-#define RENGINE_API __declspec(dllexport)
-#else
-#define RENGINE_API __declspec(dllimport)
-#endif

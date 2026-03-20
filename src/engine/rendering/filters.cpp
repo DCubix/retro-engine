@@ -1,10 +1,8 @@
-#include "filter.h"
+#include "filters.h"
 
 #include "shaders/generated/quad_vert.h"
 #include "shaders/generated/blur_frag.h"
 #include "shaders/generated/combine_frag.h"
-
-#include "filters.h"
 
 #include <fmt/format.h>
 

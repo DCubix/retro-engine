@@ -6,7 +6,7 @@
 #include "../utils/custom_types.h"
 #include "../utils/profiler.h"
 
-#include "SDL.h"
+#include <SDL3/SDL.h>
 
 class CoreEngine;
 class RenderingEngine;
@@ -31,7 +31,7 @@ public:
 /// This is the core (logic) engine, it runs on a separate thread from the rendering engine.
 /// It is responsible for the game logic and the game loop.
 /// All logic related to updating things should be done here.
-class RENGINE_API CoreEngine : public Listener {
+class CoreEngine : public Listener {
 public:
 	CoreEngine() = default;
     ~CoreEngine() = default;

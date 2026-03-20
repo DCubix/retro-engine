@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
 
 int main(int argc, char** argv) {
 	if (argc < 3) {

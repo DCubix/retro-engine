@@ -10,7 +10,7 @@ endif()
 # TODO: Get the latest version from: https://github.com/cpm-cmake/CPM.cmake/releases/latest
 file(
     DOWNLOAD
-    https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.8/CPM.cmake
+    https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.42.1/CPM.cmake
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake
 )
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake)

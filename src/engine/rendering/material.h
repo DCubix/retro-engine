@@ -17,7 +17,7 @@ enum class TextureSlot : u8 {
 	count
 };
 
-struct RENGINE_API Material {
+struct Material {
 	WPtr<Texture> textures[(size_t)TextureSlot::count];
 	WPtr<MaterialShader> customShader;
 
@@ -59,7 +59,7 @@ struct RENGINE_API Material {
 	}
 };
 
-struct RENGINE_API alignas(16) MaterialShaderData {
+struct alignas(16) MaterialShaderData {
 	float roughness{ 0.5f };
 	float metallic{ 0.0f };
 	float emissive{ 0.0f };

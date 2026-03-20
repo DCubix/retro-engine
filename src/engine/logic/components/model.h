@@ -5,7 +5,7 @@
 #include "../../rendering/texture.h"
 #include "../component.h"
 
-class RENGINE_API Model : public Component {
+class Model : public Component {
 public:
 	Model() = default;
 	Model(const SPtr<Mesh>& mesh, const Material& material)

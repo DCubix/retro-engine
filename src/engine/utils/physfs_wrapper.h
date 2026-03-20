@@ -7,7 +7,7 @@
 #include "logger.h"
 
 class File;
-class RENGINE_API FileSystem {
+class FileSystem {
 public:
 	static void Init();
 	static void Deinit();
@@ -26,7 +26,7 @@ enum class FileMode {
 	append
 };
 
-class RENGINE_API File {
+class File {
 public:
 	File() = default;
 	File(const str& fileName);
@@ -49,7 +49,7 @@ public:
 		size_t size = sizeof(T);
 		std::vector<byte> bytes(size);
 		if (PHYSFS_readBytes(mFile, bytes.data(), size) != size) {
-			utils::LogE("Failed to read file: {}\n{}", mFileName, PHYSFS_getLastError());
+			utils::LogE("Failed to read file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 			return T{};
 		}
 
@@ -79,7 +79,7 @@ public:
 		std::vector<byte> bytes(size);
 		::memcpy(bytes.data(), &data, size);
 		if (PHYSFS_writeBytes(mFile, bytes.data(), size) != size) {
-			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getLastError());
+			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 
@@ -95,7 +95,7 @@ public:
 		}
 
 		if (PHYSFS_writeBytes(mFile, data.c_str(), data.size()) != data.size()) {
-			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getLastError());
+			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 
@@ -111,7 +111,7 @@ public:
 		}
 
 		if (PHYSFS_writeBytes(mFile, data, size) != size) {
-			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getLastError());
+			utils::LogE("Failed to write file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 

@@ -74,6 +74,7 @@ bool CoreEngine::UpdateLogic()
 	bool canRender = false;
 	while (mAccumulatedTime >= runtimeTime) {
 		mApplication->OnUpdate(*mInputSystem.get(), runtimeTime);
+		mInputSystem->ResetDevices();
 		mAccumulatedTime -= runtimeTime;
 
 		mCleanupTime += runtimeTime;
@@ -100,15 +101,12 @@ void CoreEngine::ProcessInput()
 
 	// input/event loop
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT) {
+		if (event.type == SDL_EVENT_QUIT) {
 			Stop(); // Stop the engine if the window is closed
 		}
 		mInputSystem->ProcessEvent(event);
 	}
 	mProfiler.End("Input Processing");
-
-	// Reset input devices state
-	mInputSystem->ResetDevices();
 }
 
 void CoreEngine::OnMessage(const Message& message)

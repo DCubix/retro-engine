@@ -25,7 +25,7 @@ template<typename T>
 using Dict = std::unordered_map<str, T>;
 
 class Transform;
-class RENGINE_API AssetManager {
+class AssetManager {
 public:
 	void LoadTexture(const str& path, const Opt<TextureDescription>& description);
 	void LoadTexture(

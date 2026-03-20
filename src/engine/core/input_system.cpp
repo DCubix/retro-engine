@@ -8,7 +8,7 @@ Mouse::Mouse()
 void Mouse::OnProcessEvent(SDL_Event& event)
 {
 	switch (event.type) {
-		case SDL_MOUSEBUTTONDOWN:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 		{
 			u8 button = event.button.button;
 			mButtons[button].isPressed = true;
@@ -16,7 +16,7 @@ void Mouse::OnProcessEvent(SDL_Event& event)
 			mPosition.x = event.button.x;
 			mPosition.y = event.button.y;
 		} break;
-		case SDL_MOUSEBUTTONUP:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
 		{
 			u8 button = event.button.button;
 			mButtons[button].isReleased = true;
@@ -24,17 +24,17 @@ void Mouse::OnProcessEvent(SDL_Event& event)
 			mPosition.x = event.button.x;
 			mPosition.y = event.button.y;
 		} break;
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 		{
 			mPosition.x = event.motion.x;
 			mPosition.y = event.motion.y;
 		} break;
-		case SDL_MOUSEWHEEL:
+		case SDL_EVENT_MOUSE_WHEEL:
 		{
-			mScroll.x = event.wheel.preciseX;
-			mScroll.y = event.wheel.preciseY;
-			mPosition.x = event.wheel.mouseX;
-			mPosition.y = event.wheel.mouseY;
+			mScroll.x += event.wheel.x;
+			mScroll.y += event.wheel.y;
+			mPosition.x = event.wheel.mouse_x;
+			mPosition.y = event.wheel.mouse_y;
 		} break;
 	}
 }
@@ -74,29 +74,31 @@ void InputSystem::ResetDevices() {
 void Keyboard::OnProcessEvent(SDL_Event& event)
 {
 	switch (event.type) {
-		case SDL_KEYDOWN:
+		case SDL_EVENT_KEY_DOWN:
 		{
-			u32 keyCode = event.key.keysym.sym;
-			mKeys[keyCode].isPressed = true;
+			u32 keyCode = event.key.key;
+			if (!event.key.repeat) {
+				mKeys[keyCode].isPressed = true;
+			}
 			mKeys[keyCode].isHeldDown = true;
 		} break;
-		case SDL_KEYUP:
+		case SDL_EVENT_KEY_UP:
 		{
-			u32 keyCode = event.key.keysym.sym;
+			u32 keyCode = event.key.key;
 			mKeys[keyCode].isReleased = true;
 			mKeys[keyCode].isHeldDown = false;
 		} break;
-		case SDL_TEXTINPUT:
+		case SDL_EVENT_TEXT_INPUT:
 		{
-			if (SDL_IsTextInputActive()) {
+			if (SDL_TextInputActive(mWindow)) {
 				mTextEditState.text += event.text.text;
 				mTextEditState.cursorPosition += ::strlen(event.text.text);
 				mTextEditState.selectionLength = 0;
 			}
 		} break;
-		case SDL_TEXTEDITING:
+		case SDL_EVENT_TEXT_EDITING:
 		{
-			if (SDL_IsTextInputActive()) {
+			if (SDL_TextInputActive(mWindow)) {
 				mTextEditState.cursorPosition = event.edit.start;
 				mTextEditState.selectionLength = event.edit.length;
 				mTextEditState.text = event.edit.text;
@@ -113,9 +115,10 @@ void Keyboard::OnReset()
 	}
 }
 
-void Keyboard::BeginTextInput()
+void Keyboard::BeginTextInput(SDL_Window* window)
 {
-	SDL_StartTextInput();
+	mWindow = window;
+	SDL_StartTextInput(window);
 	mTextEditState.text.clear();
 	mTextEditState.cursorPosition = 0;
 	mTextEditState.selectionLength = 0;
@@ -123,5 +126,5 @@ void Keyboard::BeginTextInput()
 
 void Keyboard::EndTextInput() const
 {
-	SDL_StopTextInput();
+	SDL_StopTextInput(mWindow);
 }

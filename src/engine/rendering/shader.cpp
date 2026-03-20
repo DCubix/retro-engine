@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <vector>
 #include <regex>
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "../utils/string_utils.h"
 #include "../utils/logger.h"

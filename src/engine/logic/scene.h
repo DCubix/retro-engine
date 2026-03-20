@@ -5,7 +5,7 @@
 
 #include "../utils/pool.h"
 
-class RENGINE_API Scene {
+class Scene {
 public:
 	Scene();
 	~Scene() = default;

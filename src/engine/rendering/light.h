@@ -9,7 +9,7 @@ enum class LightType {
 	spot
 };
 
-struct RENGINE_API Light {
+struct Light {
 	LightType type;
 
 	Vector3 color;
@@ -26,7 +26,7 @@ struct RENGINE_API Light {
 	Matrix GetViewProjection(u32 face = 0) const;
 };
 
-struct RENGINE_API alignas(16) LightShaderData {
+struct alignas(16) LightShaderData {
 	alignas(16) float colorIntensity[4];
 	alignas(16) float positionRadius[4];
 	alignas(16) float directionCutoffAngle[4];

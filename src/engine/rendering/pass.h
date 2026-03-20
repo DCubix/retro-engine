@@ -3,7 +3,7 @@
 #include "framebuffer.h"
 #include "../external/raymath/raymath.h"
 
-struct RENGINE_API PassDescription {
+struct PassDescription {
 	FrameBuffer* frameBuffer{ nullptr }; // nullptr = default framebuffer
 	
 	Vector4 clearColor{ 0.0f, 0.0f, 0.0f, 1.0f };
@@ -18,7 +18,7 @@ struct RENGINE_API PassDescription {
 	u32 viewport[4]{ 0 };
 };
 
-class RENGINE_API Pass {
+class Pass {
 public:
 	Pass() = default;
 	Pass(const PassDescription& description);

@@ -6,7 +6,7 @@
 
 class Entity;
 
-class RENGINE_API Component {
+class Component {
 public:
 	virtual ~Component() = default;
 

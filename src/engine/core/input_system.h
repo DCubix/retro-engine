@@ -4,13 +4,13 @@
 #include "../utils/custom_types.h"
 #include "../external/raymath/raymath.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <array>
 #include <unordered_map>
 #include <typeindex>
 #include <concepts>
 
-struct RENGINE_API InputState {
+struct InputState {
 	bool isPressed{ false };
 	bool isHeldDown{ false };
 	bool isReleased{ false };
@@ -23,7 +23,7 @@ public:
 	virtual void OnReset() {};
 };
 
-class RENGINE_API Mouse : public InputDevice, public Listener {
+class Mouse : public InputDevice, public Listener {
 public:
 	Mouse();
 
@@ -47,29 +47,27 @@ public:
 	}
 	void SetPosition(const Vector2& position);
 
-	const Vector2& GetScroll() {
-		Vector2 scroll = mScroll;
-		mScroll = { 0.0f, 0.0f };
-		return scroll;
+	const Vector2& GetScroll() const {
+		return mScroll;
 	}
 private:
-	std::array<InputState, 5> mButtons;
+	std::array<InputState, 6> mButtons;
 	Vector2 mPosition{ 0.0f, 0.0f };
 	Vector2 mScroll{ 0.0f, 0.0f };
 };
 
-struct RENGINE_API TextEditState {
+struct TextEditState {
 	std::string text;
 	u32 cursorPosition{ 0 };
 	u32 selectionLength{ 0 };
 };
 
-class RENGINE_API Keyboard : public InputDevice {
+class Keyboard : public InputDevice {
 public:
 	void OnProcessEvent(SDL_Event& event) override;
 	void OnReset() override;
 
-	const InputState& GetKeyState(u32 keyCode) const {
+	InputState GetKeyState(u32 keyCode) const {
 		auto it = mKeys.find(keyCode);
 		if (it != mKeys.end()) {
 			return it->second;
@@ -81,15 +79,16 @@ public:
 		return mTextEditState;
 	}
 
-	void BeginTextInput();
+	void BeginTextInput(SDL_Window* window);
 	void EndTextInput() const;
 private:
 	std::unordered_map<u32, InputState> mKeys;
 	TextEditState mTextEditState;
+	SDL_Window* mWindow{ nullptr };
 };
 
 using InputDeviceMap = std::unordered_map<std::type_index, UPtr<InputDevice>>;
-class RENGINE_API InputSystem {
+class InputSystem {
 public:
 	InputSystem();
 	~InputSystem() = default;

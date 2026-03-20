@@ -3,7 +3,7 @@
 #include "../component.h"
 #include "../../rendering/light.h"
 
-class RENGINE_API LightSource : public Component {
+class LightSource : public Component {
 public:
 	LightSource() = default;
 	~LightSource() = default;

@@ -5,14 +5,14 @@
 
 #include <vector>
 
-struct RENGINE_API TransformAnmiationKeyframe {
+struct TransformAnmiationKeyframe {
 	u32 frame;
 	Vector3 position;
 	Quaternion rotation;
 	Vector3 scale;
 };
 
-class RENGINE_API TransformAnimation : public Component {
+class TransformAnimation : public Component {
 public:
 	TransformAnimation() = default;
 

@@ -18,7 +18,7 @@
 
 using MaterialID = size_t;
 
-struct RENGINE_API DrawCall {
+struct DrawCall {
 	Mesh* mesh;
 	PrimitiveType primitiveType{ PrimitiveType::triangles };
 	MaterialID materialId;
@@ -26,7 +26,7 @@ struct RENGINE_API DrawCall {
 	Opt<Matrix> transform;
 };
 
-class RENGINE_API RenderingEngine {
+class RenderingEngine {
 public:
 	RenderingEngine() = default;
 	RenderingEngine(u32 framebufferWidth, u32 framebufferHeight);

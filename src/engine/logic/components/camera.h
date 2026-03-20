@@ -2,7 +2,7 @@
 
 #include "../component.h"
 
-class RENGINE_API Camera : public Component {
+class Camera : public Component {
 public:
 	Camera() = default;
 	Camera(f32 fov, f32 zNear, f32 zFar)

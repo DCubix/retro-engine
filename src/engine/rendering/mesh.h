@@ -4,7 +4,7 @@
 #include "../external/raymath/raymath.h"
 #include <vector>
 
-struct RENGINE_API Vertex {
+struct Vertex {
 	Vector3 position;
 	Vector3 normal;
 	Vector3 tangent;
@@ -15,12 +15,12 @@ struct RENGINE_API Vertex {
 	f32 boneWeights[4];
 };
 
-struct RENGINE_API InstanceData {
+struct InstanceData {
 	u32 objectId;
 	Matrix transform;
 };
 
-struct RENGINE_API MeshDescription {
+struct MeshDescription {
 	std::vector<Vertex> vertices;
 	std::vector<u32> indices;
 	std::vector<InstanceData> instanceData;
@@ -38,7 +38,7 @@ enum class PrimitiveType {
 	triangleFan = GL_TRIANGLE_FAN
 };
 
-class RENGINE_API Mesh {
+class Mesh {
 public:
 	Mesh() = default;
 	Mesh(const MeshDescription& desc);

@@ -38,7 +38,7 @@ enum class TextureFilterMode {
 	linearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 
-struct RENGINE_API SamplerDescription {
+struct SamplerDescription {
 	TextureWrapMode wrapS{ TextureWrapMode::clampToEdge };
 	TextureWrapMode wrapT{ TextureWrapMode::clampToEdge };
 	TextureWrapMode wrapR{ TextureWrapMode::clampToEdge };
@@ -47,7 +47,7 @@ struct RENGINE_API SamplerDescription {
 	float maxAnisotropy{ 1.0f };
 };
 
-struct RENGINE_API TextureDescription {
+struct TextureDescription {
 	TextureType type{ TextureType::texture2D };
 
 	u32 width;
@@ -95,7 +95,7 @@ struct RENGINE_API TextureDescription {
 //	u32 mUnit{ 0 };
 //};
 
-class RENGINE_API Texture : public IGPUResource {
+class Texture : public IGPUResource {
 public:
 	Texture() = default;
 	Texture(const TextureDescription& description);

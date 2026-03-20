@@ -5,7 +5,7 @@
 #include <vector>
 
 class Listener;
-class RENGINE_API Message {
+class Message {
 public:
 	Message(Listener* source, const str& text, std::any data)
 		: mSource(source), mText(text), mData(data)
@@ -27,7 +27,7 @@ protected:
 };
 
 class MessageBus;
-class RENGINE_API Listener {
+class Listener {
 public:
 	virtual ~Listener() = default;
 
@@ -47,7 +47,7 @@ public:
 	void SendMessage(const str& text = "", std::any data = {});
 };
 
-class RENGINE_API MessageBus {
+class MessageBus {
 public:
 	MessageBus() = default;
 	~MessageBus() = default;

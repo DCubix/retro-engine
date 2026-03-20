@@ -34,33 +34,27 @@ void Texture::Resize(u32 width, u32 height) {
     if (mType != TextureType::texture2D) {
         utils::Fail("Cannot resize non-2D texture");
     }
+
+    // glTextureStorage2D allocates immutable storage, so we must
+    // destroy the old texture and create a new one to resize.
+    Invalidate();
+    glDeleteTextures(1, &mID);
+
     mWidth = width;
     mHeight = height;
 
-    const auto [internalFormat, format, type] = MapFormat(mFormat);
+    glCreateTextures(static_cast<GLenum>(mType), 1, &mID);
 
+    const auto [internalFormat, format, type] = MapFormat(mFormat);
     glTextureStorage2D(
         mID,
         1,
         internalFormat,
         mWidth, mHeight
     );
-    glTextureSubImage2D(
-        mID,
-        0,
-        0, 0,
-        mWidth, mHeight,
-        format,
-        type,
-        nullptr
-    );
 
-	GenerateMipmaps();
-
-    // Update the bindless handle
-    glMakeTextureHandleNonResidentARB(mBindlessHandle);
-    mBindlessHandle = glGetTextureHandleARB(mID);
-    glMakeTextureHandleResidentARB(mBindlessHandle);
+    GenerateMipmaps();
+    MakeResident();
 }
 
 void Texture::Update(const byte* pixels)
@@ -137,15 +131,17 @@ void Texture::InitTexture2D(const TextureDescription& description) {
         description.width, description.height
     );
 	UpdateParameters(description);
-    glTextureSubImage2D(
-        mID,
-        0,
-        0, 0,
-        description.width, description.height,
-        format,
-        type,
-        description.layers[0]
-    );
+    if (description.layers[0]) {
+        glTextureSubImage2D(
+            mID,
+            0,
+            0, 0,
+            description.width, description.height,
+            format,
+            type,
+            description.layers[0]
+        );
+    }
 }
 
 void Texture::InitTextureCubeMap(const TextureDescription& description) {
@@ -168,6 +164,9 @@ void Texture::InitTextureCubeMap(const TextureDescription& description) {
     UpdateParameters(description);
 
     for (int i = 0; i < 6; i++) {
+        if (!description.layers[i]) {
+            continue;
+        }
 		glTextureSubImage3D(
 			mID,
 			0,

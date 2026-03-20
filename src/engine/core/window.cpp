@@ -2,9 +2,8 @@
 
 #include "../external/glad/glad.h"
 #include <stdexcept>
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <fmt/color.h>
-#include <fmt/printf.h>
 
 void APIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint id,
                                      GLenum severity, GLsizei length,
@@ -32,13 +31,11 @@ Window::Window(const WindowConfiguration& config)
 {
 	MessageBus::Get().RegisterListener(this);
 
-    SDL_SetHint(SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL, "1");
-
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("Failed to initialize SDL: " + str(SDL_GetError()));
     }
 
-    Uint32 flags = SDL_WINDOW_OPENGL;
+    SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
     if (config.fullScreen) {
         flags |= SDL_WINDOW_FULLSCREEN;
     }
@@ -69,20 +66,11 @@ Window::Window(const WindowConfiguration& config)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 #endif
 
-    if (!config.windowHandle) {
-        mWindow = SDL_CreateWindow(
-            config.title.c_str(),
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            config.width, config.height,
-            flags
-        );
-    }
-    else {
-		mWindow = SDL_CreateWindowFrom(config.windowHandle);
-		if (!mWindow) {
-			throw std::runtime_error("Failed to create window from handle: " + str(SDL_GetError()));
-		}
-    }
+    mWindow = SDL_CreateWindow(
+		config.title.c_str(),
+		config.width, config.height,
+		flags
+	);
 
     if (!mWindow) {
         throw std::runtime_error("Failed to create window: " + str(SDL_GetError()));
@@ -96,8 +84,8 @@ Window::Window(const WindowConfiguration& config)
 	}
 
 	// load OpenGL functions
-	if (gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress) == 0) {
-		SDL_GL_DeleteContext(mContext);
+	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+		SDL_GL_DestroyContext(mContext);
 		SDL_DestroyWindow(mWindow);
 		throw std::runtime_error("Failed to initialize OpenGL context: " + str(SDL_GetError()));
 	}
@@ -112,7 +100,7 @@ Window::Window(const WindowConfiguration& config)
 
 	glEnable(GL_MULTISAMPLE);
 
-    if (!config.windowHandle) SDL_ShowWindow(mWindow);
+    SDL_ShowWindow(mWindow);
 }
 
 Window::~Window()
@@ -122,7 +110,7 @@ Window::~Window()
         mWindow = nullptr;
     }
 	if (mContext) {
-		SDL_GL_DeleteContext(mContext);
+		SDL_GL_DestroyContext(mContext);
 		mContext = nullptr;
 	}
     SDL_Quit();
@@ -140,7 +128,7 @@ void Window::SetSize(u32 width, u32 height)
     SDL_SetWindowSize(mWindow, width, height);
 }
 
-const str& Window::GetTitle() const
+str Window::GetTitle() const
 {
     if (!mWindow) {
         throw std::runtime_error("Window is not initialized.");
@@ -177,10 +165,10 @@ void Window::OnMessage(const Message& message)
 	}
 	else if (text == "WIN_set_cursor_position") {
 		auto pos = message.GetData<Tup<i32, i32>>();
-		SDL_WarpMouseInWindow(mWindow, std::get<0>(pos), std::get<1>(pos));
+		SDL_WarpMouseInWindow(mWindow, (float)std::get<0>(pos), (float)std::get<1>(pos));
 	}
 	else if (text == "WIN_set_cursor_visible") {
 		auto visible = message.GetData<bool>();
-		SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+		if (visible) SDL_ShowCursor(); else SDL_HideCursor();
 	}
 }

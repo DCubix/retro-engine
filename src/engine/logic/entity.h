@@ -8,7 +8,7 @@
 #include <typeindex>
 #include <concepts>
 
-class RENGINE_API Entity {
+class Entity {
 public:
 	Entity() = default;
 	~Entity() = default;

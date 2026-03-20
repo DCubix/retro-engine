@@ -26,7 +26,7 @@ enum class BufferAccess {
 };
 
 template <typename T, BufferType Type>
-class RENGINE_API Buffer : public IGPUResource {
+class Buffer : public IGPUResource {
 public:
 	Buffer() = default;
 
@@ -111,12 +111,12 @@ enum class DataType {
 	boolValue
 };
 
-struct RENGINE_API VertexAttribute {
+struct VertexAttribute {
 	DataType type;
 	bool normalized{ false };
 };
 
-class RENGINE_API VertexFormat {
+class VertexFormat {
 public:
 	VertexFormat() = default;
 	VertexFormat(const std::initializer_list<VertexAttribute>& attributes);
@@ -191,7 +191,7 @@ private:
 };
 
 template <typename V>
-struct RENGINE_API VertexBufferDescription {
+struct VertexBufferDescription {
 	VertexFormat format;
 	BufferUsage usage{ BufferUsage::staticDraw };
 	const V* initialData{ nullptr };
@@ -199,7 +199,7 @@ struct RENGINE_API VertexBufferDescription {
 };
 
 template <typename V>
-class RENGINE_API VertexBuffer : public Buffer<V, BufferType::arrayBuffer> {
+class VertexBuffer : public Buffer<V, BufferType::arrayBuffer> {
 public:
 	VertexBuffer() {}
 
@@ -222,7 +222,7 @@ private:
 	VertexFormat mFormat;
 };
 
-class RENGINE_API VertexArray : public IGPUResource {
+class VertexArray : public IGPUResource {
 public:
 	VertexArray() = default;
 

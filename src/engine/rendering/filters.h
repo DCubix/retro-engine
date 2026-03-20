@@ -16,7 +16,7 @@ enum class FilterInput {
 	normal
 };
 
-class RENGINE_API Filter : public Shader {
+class Filter : public Shader {
 public:
 	Filter(const str& src);
 
@@ -36,7 +36,7 @@ protected:
 	FilterInput mInput{ FilterInput::lightingPass };
 };
 
-class RENGINE_API BlurFilter : public Filter {
+class BlurFilter : public Filter {
 public:
 	BlurFilter();
 
@@ -60,7 +60,7 @@ enum class CombineMode {
 	multiply,
 };
 
-class RENGINE_API CombineFilter : public Filter {
+class CombineFilter : public Filter {
 public:
 	CombineFilter();
 

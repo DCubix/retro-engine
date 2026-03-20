@@ -1,20 +1,15 @@
 #pragma once
 
-#include "SDL.h"
+#include <SDL3/SDL.h>
 #include "../utils/custom_types.h"
 #include "messaging.h"
 
-#include <windows.h>
-#undef near
-#undef far
-
-struct RENGINE_API WindowConfiguration {
+struct WindowConfiguration {
     str title;
     u32 width;
     u32 height;
     bool fullScreen;
     bool resizable;
-    HWND windowHandle{ nullptr };
 };
 
 const WindowConfiguration defaultWindowConfig = {
@@ -25,7 +20,7 @@ const WindowConfiguration defaultWindowConfig = {
     .resizable = false
 };
 
-class RENGINE_API Window : public Listener {
+class Window : public Listener {
 public:
     Window(const WindowConfiguration& config = defaultWindowConfig);
     ~Window();
@@ -33,7 +28,7 @@ public:
     Tup<u32, u32> GetSize() const;
     void SetSize(u32 width, u32 height);
 
-    const str& GetTitle() const;
+    str GetTitle() const;
     void SetTitle(const str& title);
 
 	void SwapBuffers() const;

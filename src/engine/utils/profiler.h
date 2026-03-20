@@ -10,13 +10,13 @@ using namespace std::chrono;
 using Duration = duration<float, std::milli>;
 using TimePoint = high_resolution_clock::time_point;
 
-struct RENGINE_API ProfilerData {
+struct ProfilerData {
 	TimePoint start;
 	TimePoint end;
 	Duration duration;
 };
 
-class RENGINE_API Profiler {
+class Profiler {
 	using Data = std::unordered_map<str, ProfilerData>;
 public:
 	Profiler() = default;
