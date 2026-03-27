@@ -5,6 +5,7 @@
 #include "window.h"
 #include "../utils/custom_types.h"
 #include "../utils/profiler.h"
+#include "../src/editor/EditorApp.h"
 
 #include <SDL3/SDL.h>
 
@@ -67,6 +68,8 @@ private:
 	UPtr<InputSystem> mInputSystem{ nullptr };
 
 	Profiler mProfiler{};
+
+	UPtr<EditorApp> mEditorApp{ nullptr };
 
     void MainLoopThread();
 

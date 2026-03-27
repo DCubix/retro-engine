@@ -100,6 +100,16 @@ CPMAddPackage(
         "ASSIMP_BUILD_TESTS OFF"
 )
 
+CPMAddPackage(
+    NAME RmlUi
+    GITHUB_REPOSITORY mikke89/RmlUi
+    GIT_TAG 6.1
+    OPTIONS
+        "BUILD_SAMPLES OFF"
+        "BUILD_TESTING OFF"
+        "RMLUI_BACKEND_SUPPORT OFF"
+)
+
 # Cross platform IS_DEBUG flag
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DIS_DEBUG)
@@ -138,4 +148,9 @@ endif()
 if (assimp_ADDED)
     target_include_directories(${LIBNAME} PUBLIC ${assimp_SOURCE_DIR}/include)
     target_link_libraries(${LIBNAME} PUBLIC assimp)
+endif()
+
+if (RmlUi_ADDED)
+    target_include_directories(${LIBNAME} PUBLIC ${RmlUi_SOURCE_DIR}/Include)
+    target_link_libraries(${LIBNAME} PUBLIC rmlui_core)
 endif()

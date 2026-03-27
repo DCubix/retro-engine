@@ -33,6 +33,8 @@ public:
 
 	void SwapBuffers() const;
 
+	SDL_Window* GetSDLWindow() const { return mWindow; }
+
     void OnMessage(const Message& message) override;
 private:
     SDL_Window* mWindow{ nullptr };
