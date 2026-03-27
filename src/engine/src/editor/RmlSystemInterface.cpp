@@ -58,7 +58,6 @@ void RmlSystemInterface::InjectSDLEvent(Rml::Context* context, const SDL_Event& 
                 MapSDLKey(event.key.key),
                 MapSDLModifiers(event.key.mod)
             );
-            // Also forward printable characters as text input if not handled by TEXT_INPUT
             break;
         }
         case SDL_EVENT_KEY_UP: {
@@ -153,12 +152,12 @@ Rml::Input::KeyIdentifier RmlSystemInterface::MapSDLKey(SDL_Keycode keycode) {
         case SDLK_F10:          return K::KI_F10;
         case SDLK_F11:          return K::KI_F11;
         case SDLK_F12:          return K::KI_F12;
-        case SDLK_LSHIFT:
-        case SDLK_RSHIFT:       return K::KI_LSHIFT;
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:        return K::KI_LCONTROL;
-        case SDLK_LALT:
-        case SDLK_RALT:         return K::KI_LMENU;
+        case SDLK_LSHIFT:       return K::KI_LSHIFT;
+        case SDLK_RSHIFT:       return K::KI_RSHIFT;
+        case SDLK_LCTRL:        return K::KI_LCONTROL;
+        case SDLK_RCTRL:        return K::KI_RCONTROL;
+        case SDLK_LALT:         return K::KI_LMENU;
+        case SDLK_RALT:         return K::KI_RMENU;
         default:                return K::KI_UNKNOWN;
     }
 }
