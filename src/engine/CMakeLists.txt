@@ -147,6 +147,9 @@ if (assimp_ADDED)
     target_link_libraries(${LIBNAME} PUBLIC assimp)
 endif()
 
+find_package(TBB REQUIRED)
+target_link_libraries(${LIBNAME} PUBLIC TBB::tbb)
+
 if (imgui_ADDED)
     set(IMGUI_SOURCES
         ${imgui_SOURCE_DIR}/imgui.cpp

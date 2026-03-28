@@ -51,56 +51,56 @@ void EditorApp::ApplyDarkTheme() {
     ImVec4* c = s.Colors;
 
     // Background / base surfaces
-    c[ImGuiCol_WindowBg]          = ImVec4(0.118f, 0.118f, 0.118f, 1.00f); // #1e1e1e
-    c[ImGuiCol_ChildBg]           = ImVec4(0.145f, 0.145f, 0.149f, 1.00f); // #252526
-    c[ImGuiCol_PopupBg]           = ImVec4(0.145f, 0.145f, 0.149f, 1.00f);
-    c[ImGuiCol_Border]            = ImVec4(0.235f, 0.235f, 0.235f, 1.00f); // #3c3c3c
-    c[ImGuiCol_FrameBg]           = ImVec4(0.200f, 0.200f, 0.200f, 1.00f); // ~#333333
-    c[ImGuiCol_FrameBgHovered]    = ImVec4(0.270f, 0.270f, 0.270f, 1.00f);
-    c[ImGuiCol_FrameBgActive]     = ImVec4(0.310f, 0.310f, 0.310f, 1.00f);
+    c[ImGuiCol_WindowBg]          = ImVec4(0.067f, 0.067f, 0.067f, 1.00f); // #111111
+    c[ImGuiCol_ChildBg]           = ImVec4(0.078f, 0.078f, 0.082f, 1.00f); // #141415
+    c[ImGuiCol_PopupBg]           = ImVec4(0.086f, 0.086f, 0.090f, 1.00f); // #161617
+    c[ImGuiCol_Border]            = ImVec4(0.157f, 0.157f, 0.157f, 1.00f); // #282828
+    c[ImGuiCol_FrameBg]           = ImVec4(0.118f, 0.118f, 0.118f, 1.00f); // #1e1e1e
+    c[ImGuiCol_FrameBgHovered]    = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
+    c[ImGuiCol_FrameBgActive]     = ImVec4(0.220f, 0.220f, 0.220f, 1.00f);
 
     // Title bars
-    c[ImGuiCol_TitleBg]           = ImVec4(0.176f, 0.176f, 0.176f, 1.00f); // #2d2d2d
-    c[ImGuiCol_TitleBgActive]     = ImVec4(0.118f, 0.118f, 0.118f, 1.00f);
-    c[ImGuiCol_TitleBgCollapsed]  = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
+    c[ImGuiCol_TitleBg]           = ImVec4(0.086f, 0.086f, 0.086f, 1.00f); // #161616
+    c[ImGuiCol_TitleBgActive]     = ImVec4(0.067f, 0.067f, 0.067f, 1.00f);
+    c[ImGuiCol_TitleBgCollapsed]  = ImVec4(0.086f, 0.086f, 0.086f, 1.00f);
 
     // Tabs
-    c[ImGuiCol_Tab]               = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
-    c[ImGuiCol_TabHovered]        = ImVec4(0.274f, 0.451f, 0.702f, 1.00f);
-    c[ImGuiCol_TabSelected]       = ImVec4(0.118f, 0.118f, 0.118f, 1.00f);
+    c[ImGuiCol_Tab]               = ImVec4(0.086f, 0.086f, 0.086f, 1.00f);
+    c[ImGuiCol_TabHovered]        = ImVec4(0.220f, 0.365f, 0.573f, 1.00f);
+    c[ImGuiCol_TabSelected]       = ImVec4(0.067f, 0.067f, 0.067f, 1.00f);
     c[ImGuiCol_TabSelectedOverline]= ImVec4(0.027f, 0.478f, 0.800f, 1.00f); // #007acc accent
-    c[ImGuiCol_TabDimmed]         = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
-    c[ImGuiCol_TabDimmedSelected] = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
+    c[ImGuiCol_TabDimmed]         = ImVec4(0.086f, 0.086f, 0.086f, 1.00f);
+    c[ImGuiCol_TabDimmedSelected] = ImVec4(0.086f, 0.086f, 0.086f, 1.00f);
 
     // Headers (collapsible sections, etc.)
-    c[ImGuiCol_Header]            = ImVec4(0.200f, 0.200f, 0.200f, 1.00f);
-    c[ImGuiCol_HeaderHovered]     = ImVec4(0.274f, 0.451f, 0.702f, 0.80f);
-    c[ImGuiCol_HeaderActive]      = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
+    c[ImGuiCol_Header]            = ImVec4(0.118f, 0.118f, 0.118f, 1.00f);
+    c[ImGuiCol_HeaderHovered]     = ImVec4(0.220f, 0.365f, 0.573f, 0.80f);
+    c[ImGuiCol_HeaderActive]      = ImVec4(0.027f, 0.400f, 0.680f, 1.00f);
 
     // Buttons
-    c[ImGuiCol_Button]            = ImVec4(0.055f, 0.388f, 0.612f, 1.00f); // #0e639c
-    c[ImGuiCol_ButtonHovered]     = ImVec4(0.067f, 0.467f, 0.733f, 1.00f); // #1177bb
-    c[ImGuiCol_ButtonActive]      = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
+    c[ImGuiCol_Button]            = ImVec4(0.043f, 0.310f, 0.490f, 1.00f); // #0b4f7d
+    c[ImGuiCol_ButtonHovered]     = ImVec4(0.055f, 0.388f, 0.612f, 1.00f); // #0e639c
+    c[ImGuiCol_ButtonActive]      = ImVec4(0.027f, 0.440f, 0.720f, 1.00f);
 
     // Scrollbar / slider / resize
-    c[ImGuiCol_ScrollbarBg]       = ImVec4(0.118f, 0.118f, 0.118f, 1.00f);
-    c[ImGuiCol_ScrollbarGrab]     = ImVec4(0.259f, 0.259f, 0.259f, 1.00f);
-    c[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.333f, 0.333f, 0.333f, 1.00f);
+    c[ImGuiCol_ScrollbarBg]       = ImVec4(0.067f, 0.067f, 0.067f, 1.00f);
+    c[ImGuiCol_ScrollbarGrab]     = ImVec4(0.176f, 0.176f, 0.176f, 1.00f);
+    c[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.243f, 0.243f, 0.243f, 1.00f);
     c[ImGuiCol_CheckMark]         = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
     c[ImGuiCol_SliderGrab]        = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
     c[ImGuiCol_SliderGrabActive]  = ImVec4(0.102f, 0.541f, 0.851f, 1.00f);
 
     // Dockspace separator
-    c[ImGuiCol_Separator]         = ImVec4(0.235f, 0.235f, 0.235f, 1.00f);
+    c[ImGuiCol_Separator]         = ImVec4(0.157f, 0.157f, 0.157f, 1.00f);
     c[ImGuiCol_SeparatorHovered]  = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
     c[ImGuiCol_SeparatorActive]   = ImVec4(0.027f, 0.478f, 0.800f, 1.00f);
 
     // Text
-    c[ImGuiCol_Text]              = ImVec4(0.831f, 0.831f, 0.831f, 1.00f); // #d4d4d4
-    c[ImGuiCol_TextDisabled]      = ImVec4(0.502f, 0.502f, 0.502f, 1.00f);
+    c[ImGuiCol_Text]              = ImVec4(0.780f, 0.780f, 0.780f, 1.00f); // #c7c7c7
+    c[ImGuiCol_TextDisabled]      = ImVec4(0.400f, 0.400f, 0.400f, 1.00f);
 
     // Menu
-    c[ImGuiCol_MenuBarBg]         = ImVec4(0.196f, 0.196f, 0.200f, 1.00f); // #323233
+    c[ImGuiCol_MenuBarBg]         = ImVec4(0.098f, 0.098f, 0.102f, 1.00f); // #19191a
 }
 
 void EditorApp::ProcessEvent(const SDL_Event& event) {

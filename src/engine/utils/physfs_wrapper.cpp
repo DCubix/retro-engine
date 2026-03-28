@@ -25,11 +25,11 @@ File::File(const str& fileName, FileMode mode)
 
 	if (mFile) {
 		if (!PHYSFS_stat(fileName.c_str(), &mStat)) {
-			utils::LogE("Failed to get file stat: {}\n{}", fileName, PHYSFS_getLastError());
+			utils::LogE("Failed to get file stat: {}\n{}", fileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 	else {
-		utils::LogE("Failed to open file: {}\n{}", fileName, PHYSFS_getLastError());
+		utils::LogE("Failed to open file: {}\n{}", fileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 }
 
@@ -37,7 +37,7 @@ File::~File()
 {
 	if (mFile) {
 		if (!PHYSFS_close(mFile)) {
-			utils::LogE("Failed to close file: {}\n{}", mFileName, PHYSFS_getLastError());
+			utils::LogE("Failed to close file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 		mFile = nullptr;
 	}
@@ -57,7 +57,7 @@ std::vector<byte> File::ReadAll()
 
 	std::vector<byte> buffer(mStat.filesize);
 	if (PHYSFS_readBytes(mFile, buffer.data(), mStat.filesize) != mStat.filesize) {
-		utils::LogE("Failed to read file: {}\n{}", mFileName, PHYSFS_getLastError());
+		utils::LogE("Failed to read file: {}\n{}", mFileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return std::vector<byte>();
 	}
 	return buffer;
@@ -154,9 +154,10 @@ void FileSystem::Deinit()
 	utils::LogI("PHYSFS deinitialized");
 }
 
-void DirCallback(void* data, const char* origdir, const char* fname) 
+PHYSFS_EnumerateCallbackResult DirCallback(void* data, const char* origdir, const char* fname) 
 {
 	utils::LogD("\tMounted file: {}{}", origdir, fname);
+	return PHYSFS_ENUM_OK;
 }
 
 void FileSystem::Mount(const str& fileOrPath, const str& mountPoint)
@@ -167,14 +168,14 @@ void FileSystem::Mount(const str& fileOrPath, const str& mountPoint)
 	}
 
 	if (!PHYSFS_mount(fileOrPath.c_str(), mountPoint.c_str(), 1)) {
-		utils::LogE("Failed to mount file/path: {}\n{}", fileOrPath, PHYSFS_getLastError());
+		utils::LogE("Failed to mount file/path: {}\n{}", fileOrPath, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;
 	}
 	utils::LogI("Mounted file/path: {} => {}", fileOrPath, mountPoint);
 
 	// print all mounted paths
 #ifdef IS_DEBUG
-	PHYSFS_enumerateFilesCallback(
+	PHYSFS_enumerate(
 		mountPoint.c_str(),
 		DirCallback,
 		nullptr
@@ -189,7 +190,7 @@ void FileSystem::Mount(const void* memory, size_t size, const str& newPath, cons
 		return;
 	}
 	if (!PHYSFS_mountMemory(memory, size, nullptr, newPath.c_str(), mountPoint.c_str(), 1)) {
-		utils::LogE("Failed to mount file/path: {}\n{}", newPath, PHYSFS_getLastError());
+		utils::LogE("Failed to mount file/path: {}\n{}", newPath, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;
 	}
 	utils::LogI("Mounted memory: {} => {}", newPath, mountPoint);
@@ -202,7 +203,7 @@ void FileSystem::Unmount(const str& mountPoint)
 		return;
 	}
 	if (!PHYSFS_unmount(mountPoint.c_str())) {
-		utils::LogE("Failed to unmount: {}\n{}", mountPoint, PHYSFS_getLastError());
+		utils::LogE("Failed to unmount: {}\n{}", mountPoint, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return;
 	}
 	utils::LogI("Unmounted: {}", mountPoint);
