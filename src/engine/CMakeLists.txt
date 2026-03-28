@@ -100,6 +100,13 @@ CPMAddPackage(
         "ASSIMP_BUILD_TESTS OFF"
 )
 
+CPMAddPackage(
+    NAME imgui
+    GITHUB_REPOSITORY ocornut/imgui
+    GIT_TAG docking
+    DOWNLOAD_ONLY YES
+)
+
 # Cross platform IS_DEBUG flag
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DIS_DEBUG)
@@ -138,4 +145,23 @@ endif()
 if (assimp_ADDED)
     target_include_directories(${LIBNAME} PUBLIC ${assimp_SOURCE_DIR}/include)
     target_link_libraries(${LIBNAME} PUBLIC assimp)
+endif()
+
+find_package(TBB REQUIRED)
+target_link_libraries(${LIBNAME} PUBLIC TBB::tbb)
+
+if (imgui_ADDED)
+    set(IMGUI_SOURCES
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+    )
+    target_sources(${LIBNAME} PRIVATE ${IMGUI_SOURCES})
+    target_include_directories(${LIBNAME} PUBLIC
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+    )
 endif()

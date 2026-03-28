@@ -596,7 +596,6 @@ _classes = (
 
 
 def register():
-    _ensure_node_group()
     for cls in _classes:
         bpy.utils.register_class(cls)
     bpy.types.TOPBAR_MT_file_export.append(_menu_export)

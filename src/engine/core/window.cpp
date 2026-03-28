@@ -95,7 +95,9 @@ Window::Window(const WindowConfiguration& config)
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(GLDebugMessageCallback, nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_OTHER, 0, GL_DEBUG_SEVERITY_NOTIFICATION, -1, "OpenGL Debug Output Enabled");
+	// Skip GL_DEBUG_SEVERITY_NOTIFICATION
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);	
+	glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_OTHER, 0, GL_DEBUG_SEVERITY_LOW, -1, "OpenGL Debug Output Enabled");
 #endif
 
 	glEnable(GL_MULTISAMPLE);

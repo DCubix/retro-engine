@@ -62,6 +62,10 @@ void CoreEngine::RenderFrame()
 	mRenderingEngine->GetDebugDraw()->End(mRenderingEngine->GetViewProjectionMatrix());
 	mProfiler.End("Debug Drawing");
 
+	mProfiler.Begin("Post Render");
+	mApplication->OnPostRender(*mRenderingEngine.get());
+	mProfiler.End("Post Render");
+
 	mWindow->SwapBuffers();
 }
 
@@ -104,6 +108,7 @@ void CoreEngine::ProcessInput()
 		if (event.type == SDL_EVENT_QUIT) {
 			Stop(); // Stop the engine if the window is closed
 		}
+		mApplication->OnEvent(event);
 		mInputSystem->ProcessEvent(event);
 	}
 	mProfiler.End("Input Processing");

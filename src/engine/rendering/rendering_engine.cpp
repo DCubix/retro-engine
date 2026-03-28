@@ -478,8 +478,9 @@ void RenderingEngine::RunLightingPass()
 void RenderingEngine::RunPostProcessingPass()
 {
 	if (mFilters.empty()) {
+		mLastSceneTexture = mLightingBuffer->GetColorTexture(0);
 		glClear(GL_COLOR_BUFFER_BIT);
-		DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, mLightingBuffer->GetColorTexture(0));
+		DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, mLastSceneTexture);
 		return;
 	}
 	
@@ -494,6 +495,7 @@ void RenderingEngine::RunPostProcessingPass()
 	mQuadVAO.Unbind();
 	mPostProcessingPass.End();
 
+	mLastSceneTexture = output;
 	glClear(GL_COLOR_BUFFER_BIT);
 	DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, output);
 }

@@ -613,7 +613,7 @@ i32 DebugDraw::Char(i32 x, i32 y, char character, const Vector4& color, f32 scal
 
 	auto fnDrawQuad = [&](i32 cx, i32 cy, f32 uvx, f32 uvy, f32 uvw, f32 uvh, f32 w, f32 h, const Vector4& color) {
 		Vector3 size{ w, h, 0.0f };
-		Vector3 offset{ cx, cy, 0.0f };
+		Vector3 offset{ static_cast<f32>(cx), static_cast<f32>(cy), 0.0f };
 		for (const Vector3& v : quadVerts) {
 			cmd.vertices.emplace_back(
 				v * size + offset,

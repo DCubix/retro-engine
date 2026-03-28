@@ -44,8 +44,19 @@ Matrix Light::GetViewProjection(u32 face) const
 							position, position + Vector3{ 0.0f, 0.0f, -1.0f },
 							Vector3{ 0.0f, -1.0f, 0.0f }
 						);
+					default:
+						return MatrixLookAt(
+							position, position + Vector3{ 1.0f, 0.0f, 0.0f },
+							Vector3{ 0.0f, -1.0f, 0.0f }
+						);
 				}
 			}
+			default:
+				return MatrixLookAt(
+					position,
+					position + direction,
+					Vector3{ 0.0f, 1.0f, 0.0f }
+				);
 		}
 	};
 
@@ -57,6 +68,8 @@ Matrix Light::GetViewProjection(u32 face) const
 				return MatrixPerspective(cutoffAngle, 1.0f, 0.01f, radius * 10.0f);
 			case LightType::point:
 				return MatrixPerspective(90.0f * DEG2RAD, 1.0f, 1.0f, radius);
+			default:
+				return MatrixOrtho(-20.0f, 20.0f, -20.0f, 20.0f, 0.01f, 1000.0f);
 		}
 	};
 

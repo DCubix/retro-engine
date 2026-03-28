@@ -26,6 +26,12 @@ public:
 	/// This function is called every frame for rendering
 	/// It should be used to render the application.
 	virtual void OnRender(RenderingEngine& renderer) = 0;
+	/// Called after the engine's GPU render passes complete, before SwapBuffers.
+	/// Override to draw overlay UI (e.g. ImGui) on top of the rendered scene.
+	virtual void OnPostRender(RenderingEngine& renderer) {}
+	/// Called for each SDL event before it is forwarded to the input system.
+	/// Override to inject events into custom UI layers (e.g. ImGui).
+	virtual void OnEvent(const SDL_Event& event) {}
 };
 
 /// This is the core (logic) engine, it runs on a separate thread from the rendering engine.
