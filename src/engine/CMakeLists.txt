@@ -101,13 +101,10 @@ CPMAddPackage(
 )
 
 CPMAddPackage(
-    NAME RmlUi
-    GITHUB_REPOSITORY mikke89/RmlUi
-    GIT_TAG 6.1
-    OPTIONS
-        "BUILD_SAMPLES OFF"
-        "BUILD_TESTING OFF"
-        "RMLUI_BACKEND_SUPPORT OFF"
+    NAME imgui
+    GITHUB_REPOSITORY ocornut/imgui
+    GIT_TAG docking
+    DOWNLOAD_ONLY YES
 )
 
 # Cross platform IS_DEBUG flag
@@ -150,7 +147,18 @@ if (assimp_ADDED)
     target_link_libraries(${LIBNAME} PUBLIC assimp)
 endif()
 
-if (RmlUi_ADDED)
-    target_include_directories(${LIBNAME} PUBLIC ${RmlUi_SOURCE_DIR}/Include)
-    target_link_libraries(${LIBNAME} PUBLIC rmlui_core)
+if (imgui_ADDED)
+    set(IMGUI_SOURCES
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+    )
+    target_sources(${LIBNAME} PRIVATE ${IMGUI_SOURCES})
+    target_include_directories(${LIBNAME} PUBLIC
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+    )
 endif()

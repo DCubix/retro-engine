@@ -1,47 +1,47 @@
 #pragma once
 
-#include "RmlRenderer.h"
-#include "RmlSystemInterface.h"
-
-#include <RmlUi/Core.h>
+#include <imgui.h>
 #include <SDL3/SDL.h>
 
-/// Top-level editor class that owns the RmlUi context and integrates with
-/// the engine's SDL3/OpenGL setup.
+class RenderingEngine;
+class Texture;
+
+/// ImGui-based editor UI.
+/// Owns the ImGui context, backends, and per-frame UI drawing.
+/// Not coupled to CoreEngine — initialised and driven by EditorApplication.
 class EditorApp {
 public:
     EditorApp() = default;
     ~EditorApp() = default;
 
-    /// Initialize RmlUi, load the editor document, and show it.
-    /// Must be called after OpenGL context is current.
-    /// @param window   The SDL3 window.
-    /// @param width    Viewport width in pixels.
-    /// @param height   Viewport height in pixels.
-    bool Init(SDL_Window* window, int width, int height);
+    /// Initialise ImGui with the SDL3 + OpenGL3 backends.
+    /// Must be called with an active OpenGL context.
+    bool Init(SDL_Window* window, void* glContext);
 
-    /// Call each frame before Render() to update the RmlUi context.
-    void Update();
+    /// Forward an SDL event to the ImGui SDL3 backend.
+    void ProcessEvent(const SDL_Event& event);
 
-    /// Call each frame (after the engine scene render) to render the UI.
+    /// Begin a new ImGui frame (call before DrawUI).
+    void NewFrame();
+
+    /// Draw the full editor layout: dockspace + all panels.
+    /// @param renderer   Used to retrieve the scene viewport texture.
+    void DrawUI(RenderingEngine& renderer);
+
+    /// Render the ImGui draw data to the current OpenGL context.
     void Render();
 
-    /// Call on shutdown to clean up RmlUi resources.
+    /// Destroy ImGui and backends.
     void Shutdown();
 
-    /// Forward an SDL3 event to the RmlUi context.
-    void InjectEvent(const SDL_Event& event);
-
-    /// Call when the window is resized.
-    void Resize(int width, int height);
-
 private:
-    RmlRenderer         m_renderer;
-    RmlSystemInterface  m_system_interface;
-    Rml::Context*       m_context{ nullptr };
+    bool m_initialised{ false };
 
-    int m_width{ 0 };
-    int m_height{ 0 };
-
-    void SetupProjection();
+    void ApplyDarkTheme();
+    void DrawMenuBar();
+    void DrawViewport(RenderingEngine& renderer);
+    void DrawSceneHierarchy();
+    void DrawInspector();
+    void DrawAssetBrowser();
+    void DrawConsole();
 };

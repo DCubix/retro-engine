@@ -50,6 +50,10 @@ public:
 	u32 GetFramebufferWidth() const { return mGBuffer->GetWidth(); }
 	u32 GetFramebufferHeight() const { return mGBuffer->GetHeight(); }
 
+	/// Returns the final rendered scene texture (after post-processing).
+	/// Use this to display the scene in an editor viewport.
+	Texture* GetSceneTexture() const { return mLastSceneTexture; }
+
 	DebugDraw* GetDebugDraw() { return mDebugDraw.get(); }
 	const Profiler& GetProfiler() const { return mProfiler; }
 
@@ -101,6 +105,8 @@ private:
 	UPtr<DebugDraw> mDebugDraw;
 
 	Profiler mProfiler{};
+
+	Texture* mLastSceneTexture{ nullptr };
 
 	void BuildSSBOMaterialData(
 		std::vector<GLuint64>& textureData,

@@ -16,6 +16,8 @@
 #include "logic/components/camera.h"
 #include "logic/components/light_source.h"
 
+#include "src/editor/EditorApplication.h"
+
 Vector3 hsv2rgb(Vector3 hsv)
 {
 	hsv.y = fminf(fmaxf(hsv.y, 0.0f), 1.0f);
@@ -274,7 +276,7 @@ int main(int argc, const char** argv) {
     };
     UPtr<CoreEngine> coreEngine = std::make_unique<CoreEngine>(
 		new Window(windowConfig),
-		new TestApplication()
+		new EditorApplication(std::make_unique<TestApplication>())
 	);
 
     coreEngine->Start(); // Start the core engine

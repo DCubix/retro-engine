@@ -2,7 +2,6 @@
 
 #include "asset_manager.h"
 #include "../rendering/rendering_engine.h"
-#include <fmt/format.h>
 
 CoreEngine::CoreEngine(Window* window, IApplication* application)
 {
@@ -18,13 +17,6 @@ CoreEngine::CoreEngine(Window* window, IApplication* application)
     FileSystem::Init();
 
 	mLastTime = SDL_GetTicks() / 1000.0;
-
-	// Initialize editor
-	mEditorApp = std::make_unique<EditorApp>();
-	if (!mEditorApp->Init(mWindow->GetSDLWindow(), static_cast<int>(width), static_cast<int>(height))) {
-		fmt::print(stderr, "[CoreEngine] EditorApp failed to initialize.\n");
-		mEditorApp.reset();
-	}
 }
 
 void CoreEngine::Start()
@@ -70,13 +62,9 @@ void CoreEngine::RenderFrame()
 	mRenderingEngine->GetDebugDraw()->End(mRenderingEngine->GetViewProjectionMatrix());
 	mProfiler.End("Debug Drawing");
 
-	// Render editor UI on top of the scene
-	if (mEditorApp) {
-		mProfiler.Begin("Editor UI");
-		mEditorApp->Update();
-		mEditorApp->Render();
-		mProfiler.End("Editor UI");
-	}
+	mProfiler.Begin("Post Render");
+	mApplication->OnPostRender(*mRenderingEngine.get());
+	mProfiler.End("Post Render");
 
 	mWindow->SwapBuffers();
 }
@@ -120,9 +108,7 @@ void CoreEngine::ProcessInput()
 		if (event.type == SDL_EVENT_QUIT) {
 			Stop(); // Stop the engine if the window is closed
 		}
-		if (mEditorApp) {
-			mEditorApp->InjectEvent(event);
-		}
+		mApplication->OnEvent(event);
 		mInputSystem->ProcessEvent(event);
 	}
 	mProfiler.End("Input Processing");
@@ -161,9 +147,4 @@ void CoreEngine::MainLoopThread()
 
 	mApplication->OnStop(); // Call the OnStop function of the application
     FileSystem::Deinit();
-
-	if (mEditorApp) {
-		mEditorApp->Shutdown();
-		mEditorApp.reset();
-	}
 }
